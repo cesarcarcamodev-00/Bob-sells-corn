@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Bob-sells-corn.Client/bob-sells-corn.Client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="Bob-sells-corn/Bob-sells-corn.API.csproj" />
+</Solution>
