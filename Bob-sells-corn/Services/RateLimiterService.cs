@@ -5,7 +5,7 @@ namespace Bob_sells_corn.Services;
 public class RateLimiterService : IRateLimiterService
 {
     private readonly IMemoryCache _memoryCache;
-    private static readonly TimeSpan RateLimitTimeSpan = TimeSpan.FromMinutes(1); // 1 request per minute
+    private static readonly TimeSpan RateLimitTimeSpan = TimeSpan.FromSeconds(5); // 1 request per minute
 
     public RateLimiterService(IMemoryCache memoryCache)
     {
