@@ -223,8 +223,9 @@ Bob-sells-corn/
 2. Client Exists?   
 2a.YES: Show Dashboard
 2b. NO: Create Client │ ShowDashboard
-      
+```
 ## buy corn 
+```  
 1. Click "Buy Corn"                    
 2. Get token from localStorage - corn_token  
 3. POST /api/Client/buy-corn - Authorization: Bearer <token>         
