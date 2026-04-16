@@ -9,11 +9,18 @@ interface LoginResponse {
   expiresAt: string;
 }
 
+interface DashboardResponse {
+  clientId: string;
+  clientName: string;
+  totalCornPurchased: number;
+  lastPurchaseDate: string | null;
+}
+
 const TOKEN_KEY = 'corn_token';
 const EXPIRES_KEY = 'corn_expiresAt';
 const CLIENT_KEY = 'corn_client';
 
-export const authService = {
+export const api = {
   async login(name: string): Promise<LoginResponse> {
     const { data } = await axios.post<LoginResponse>(
       `${API_URL}/api/auth/login`,
@@ -62,5 +69,36 @@ export const authService = {
       return null;
     }
     return token;
+  },
+
+  async getDashboard(): Promise<DashboardResponse> {
+    const token = await this.getValidToken();
+    if (!token) throw new Error('Not authenticated');
+
+    const { data } = await axios.get<DashboardResponse>(
+      `${API_URL}/api/Client/get-corn-purchased`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    return data;
+  },
+
+  async buyCorn(): Promise<{ success: boolean; totalCornPurchased: number }> {
+    const token = await this.getValidToken();
+    if (!token) throw new Error('Not authenticated');
+
+    try {
+      const { data } = await axios.post(
+        `${API_URL}/api/Client/buy-corn`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return data;
+    } catch (err: any) {
+      if (err.response?.status === 429) {
+        throw new Error(err.response.data || 'Rate limited');
+      }
+      throw err;
+    }
   }
 };

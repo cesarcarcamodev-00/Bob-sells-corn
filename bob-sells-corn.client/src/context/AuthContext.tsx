@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import { authService } from '../services/authService';
+import { api } from '../services/api';
 
 interface AuthContextType {
   client: { id: string; name: string } | null;
@@ -14,18 +14,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [client, setClient] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
-    if (authService.isAuthenticated()) {
-      setClient(authService.getClient());
+    if (api.isAuthenticated()) {
+      setClient(api.getClient());
     }
   }, []);
 
   const login = useCallback(async (name: string) => {
-    const data = await authService.login(name);
+    const data = await api.login(name);
     setClient({ id: data.clientId, name: data.clientName });
   }, []);
 
   const logout = useCallback(() => {
-    authService.logout();
+    api.logout();
     setClient(null);
   }, []);
 

@@ -54,4 +54,12 @@ public class ClientService : IClientService
 
         return client;
     }
+
+    public async Task<decimal> GetTotalCornPurchasedAsync(Guid clientId)
+    {
+        var client = await _context.Clients.FindAsync(clientId) ?? throw new KeyNotFoundException($"Client {clientId} not found");
+
+        return client.TotalCornPurchased;
+
+    }
 }
