@@ -31,10 +31,7 @@ public class ClientService : IClientService
         return client;
     }
 
-    public async Task<Client?> GetClientByIdAsync(Guid clientId)
-    {
-        return await _context.Clients.FindAsync(clientId);
-    }
+  
 
     public async Task<Client> PurchaseCornAsync(Guid clientId)
     {
