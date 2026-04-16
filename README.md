@@ -6,7 +6,7 @@ A corn purchasing API with JWT authentication and per-client rate limiting.
 
 | Aspect | Detail |
 |--------|--------|
-| **Framework** | ASP.NET Core 10.0 |
+| **Framework** | .NET 10.0 |
 | **Database** | Entity Framework Core InMemory |
 | **Authentication** | JWT Bearer Tokens |
 | **Base URL** | `https://localhost:5180` |
