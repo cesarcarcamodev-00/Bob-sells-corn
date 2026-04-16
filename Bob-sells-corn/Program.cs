@@ -57,6 +57,18 @@ builder.Services.AddAuthentication(options =>
 
 // ##Authentication
 
+
+//Adding CORS policy to allow all origins, methods, and headers for testing purposes.
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -71,5 +83,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors();
 
 app.Run();
