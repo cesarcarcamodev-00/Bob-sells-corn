@@ -5,7 +5,7 @@ namespace Bob_sells_corn.Models;
 public class Client
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     public string Name { get; set; } = string.Empty;

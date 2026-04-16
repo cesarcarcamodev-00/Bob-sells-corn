@@ -31,8 +31,27 @@ public class ClientService : IClientService
         return client;
     }
 
-    public async Task<Client?> GetClientByIdAsync(int clientId)
+    public async Task<Client?> GetClientByIdAsync(Guid clientId)
     {
         return await _context.Clients.FindAsync(clientId);
+    }
+
+    public async Task<Client> PurchaseCornAsync(Guid clientId)
+    {
+        var client = await _context.Clients.FindAsync(clientId) ?? throw new KeyNotFoundException($"Client {clientId} not found");
+        var purchase = new Purchase
+        {
+            ClientId = clientId,
+            Timestamp = DateTime.UtcNow,
+            Quantity = 1
+        };
+
+        client.LastPurchaseDate = DateTime.UtcNow;
+        client.TotalCornPurchased += 1;
+
+        _context.Purchases.Add(purchase);
+        await _context.SaveChangesAsync();
+
+        return client;
     }
 }
