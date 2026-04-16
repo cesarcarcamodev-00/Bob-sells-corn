@@ -218,9 +218,10 @@ Bob-sells-corn/
 
 ## Dataflows 
 ## login 
+```
 1. Enter Client Name  
 2. Client Exists?   
-2a.YES: Show Dashboard 
+2a.YES: Show Dashboard
 2b. NO: Create Client │ ShowDashboard
       
 ## buy corn 
@@ -231,6 +232,7 @@ Bob-sells-corn/
 5. Check IMemoryCache for rate limit
 6. RATE LIMITED?              
 6a. YES: Show error429 Response  "Limit exceeded"
-6B. NO: Create Purchase record│ Update client │ Record in   IMemoryCache │ 200 Response │ Update counter             
+6B. NO: Create Purchase record│ Update client │ Record in   IMemoryCache │ 200 Response │ Update counter
+```       
 
                     
