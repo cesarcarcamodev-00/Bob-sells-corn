@@ -13,6 +13,9 @@ builder.Services.AddOpenApi();
 
 
 // ##Persistance
+
+
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("CornDb"));
 
@@ -20,6 +23,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // ##Services
 builder.Services.AddScoped<IClientService, ClientService>();
+
+//InMemory services registration
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IRateLimiterService, RateLimiterService>();
 
 // ##Services
 
@@ -53,6 +60,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
 
 app.MapOpenApi();
 app.MapScalarApiReference();

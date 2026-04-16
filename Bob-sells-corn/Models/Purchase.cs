@@ -9,7 +9,7 @@ public class Purchase
     public int Id { get; set; }
 
     [Required]
-    public int ClientId { get; set; }
+    public Guid ClientId { get; set; }
 
     [ForeignKey(nameof(ClientId))]
     public Client? Client { get; set; }

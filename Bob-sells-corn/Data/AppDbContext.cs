@@ -16,10 +16,16 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        //Create new Ids without conflicting with seed entities.
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+        });
+
         modelBuilder.Entity<Client>().HasData(
-            new Client { Id = 1, Name = "Bob" },
-            new Client { Id = 2, Name = "Alice" },
-            new Client { Id = 3, Name = "Charlie" }
+            new Client { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Bob" },
+            new Client { Id = Guid.Parse("22222222-2222-2222-2222-222222222222"), Name = "Alice" },
+            new Client { Id = Guid.Parse("33333333-3333-3333-3333-333333333333"), Name = "Charlie" }
         );
     }
 }
