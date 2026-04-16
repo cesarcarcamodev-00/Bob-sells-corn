@@ -125,22 +125,48 @@ Authorization: Bearer <token>
 
 ```
 Bob-sells-corn/
-├── Controllers/
-│   ├── AuthController.cs      # Login endpoint
-│   └── ClientController.cs    # Purchase endpoint
-├── Services/
-│   ├── ClientService.cs       # Business logic
-│   └── RateLimiterService.cs  # Rate limiting (IMemoryCache)
-├── Models/
-│   ├── Client.cs              # Client entity
-│   └── Purchase.cs            # Purchase entity
-├── Data/
-│   ├── AppDbContext.cs        # EF Core context + seed data
-│   └── DTOs/LoginRequest.cs   # Login request model
-├── Extensions/
-│   └── ClaimsPrincipalExtension.cs  # JWT claim extraction
-├── Program.cs                 # DI, JWT config
-└── appsettings.json           # JWT settings
+├── Bob-sells-corn/                    # API Project
+│   ├── Controllers/
+│   │   ├── AuthController.cs          # POST /api/auth/login
+│   │   └── ClientController.cs       # POST /api/Client/buy-corn, GET /api/Client/get-corn-purchased
+│   ├── Services/
+│   │   ├── IClientService.cs          # Interface
+│   │   ├── ClientService.cs           # Business logic
+│   │   ├── IRateLimiterService.cs     # Interface
+│   │   └── RateLimiterService.cs     # IMemoryCache rate limiting
+│   ├── Models/
+│   │   ├── Client.cs                  # Client entity
+│   │   └── Purchase.cs                # Purchase entity
+│   ├── Data/
+│   │   ├── AppDbContext.cs            # EF Core InMemory context
+│   │   └── DTOs/
+│   │       └── LoginRequest.cs        # Login request model
+│   ├── Extensions/
+│   │   └── ClaimsPrincipalExtension.cs #JWT claim extraction
+│   ├── Program.cs                      # DI, JWT config, CORS
+│   ├── appsettings.json                # JWT settings
+│   ├── README.md                      # API documentation
+│   └── Bob-sells-corn.API.csproj
+│
+├── bob-sells-corn.client/             # Client Project (React 19 + Vite)
+│   ├── src/
+│   │   ├── context/
+│   │   │   └── AuthContext.tsx        # Auth state (login, logout, client)
+│   │   ├── pages/
+│   │   │   ├── LoginPage.tsx         # Login form
+│   │   │   └── DashboardPage.tsx     # Client dashboard/ buy corn
+│   │   ├── services/
+│   │   │   └── api.ts                # All API calls
+│   │   ├── App.tsx                   # Routing
+│   │   ├── main.tsx                  # Entry point
+│   │   └── index.css                 # Tailwind CSS
+│   ├── public/
+│   │   └── favicon.svg
+│   ├── .env                           # VITE_API_URL
+│   ├── index.html
+└── README.md                          # Documentation
+
+
 ```
 
 ---
@@ -165,27 +191,46 @@ Bob-sells-corn/
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Controllers                              │
-│  ┌─────────────────┐    ┌─────────────────────────────┐    │
-│  │ AuthController  │    │   ClientController          │    │
-│  │ POST /login     │    │   POST /buy-corn            │    │
-│  └────────┬────────┘    └──────────────┬──────────────┘    │
-└───────────┼─────────────────────────────┼───────────────────┘
-            │                             │
-            ▼                             ▼
+│                     Controllers                             │
+│  ┌─────────────────┐    ┌─────────────────────────────┐     │
+│  │ AuthController  │    │   ClientController          │     │
+│  │ POST /login     │    │   POST /buy-corn            │     │
+│  └────────┬────────┘    └──────────────┬──────────────┘     │
+└───────────┼────────────────────────────┼────────────────────┘
+            │                            │
+            ▼                            ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  ┌─────────────────┐    ┌─────────────────────────────┐     │
 │  │ ClientService   │    │ RateLimiterService          │     │
 │  │ - Login/Create  │    │ - IMemoryCache (1/min)      │     │
 │  │ - Purchase      │    │                             │     │
 │  └────────┬────────┘    └─────────────────────────────┘     │
-└────────────┼─────────────────────────────────────────────────┘
-             │
-             ▼
+└───────────┼─────────────────────────────────────────────────┘
+            │
+            ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  ┌─────────────────┐                                        │
-│  │   AppDbContext   │                                        │
-│  │ InMemoryDatabase │                                        │
+│  │   AppDbContext  │                                        │
+│  │ InMemoryDatabase│                                        │
 │  └─────────────────┘                                        │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+## Dataflows 
+## login 
+1. Enter Client Name  
+2. Client Exists?   
+2a.YES: Show Dashboard 
+2b. NO: Create Client │ ShowDashboard
+      
+## buy corn 
+1. Click "Buy Corn"                    
+2. Get token from localStorage - corn_token  
+3. POST /api/Client/buy-corn - Authorization: Bearer <token>         
+4. Extract clientId from JWT claims
+5. Check IMemoryCache for rate limit
+6. RATE LIMITED?              
+6a. YES: Show error429 Response  "Limit exceeded"
+6B. NO: Create Purchase record│ Update client │ Record in   IMemoryCache │ 200 Response │ Update counter             
+
+                    
