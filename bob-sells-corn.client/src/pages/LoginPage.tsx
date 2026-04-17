@@ -33,6 +33,7 @@ export function LoginPage() {
         <h1 className="text-xl font-bold mb-6 text-center">Corn Portal</h1>
         <input
           type="text"
+          maxLength={50}
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name"
