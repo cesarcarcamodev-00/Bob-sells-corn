@@ -5,7 +5,8 @@ namespace Bob_sells_corn.Services;
 public class RateLimiterService : IRateLimiterService
 {
     private readonly IMemoryCache _memoryCache;
-    private static readonly TimeSpan RateLimitTimeSpan = TimeSpan.FromMinutes(1); // 1 request per minute
+    private static readonly TimeSpan RateLimitTimeSpan = TimeSpan.FromMinutes(1); 
+    private static readonly int RequestLimit = 3;
 
     public RateLimiterService(IMemoryCache memoryCache)
     {
@@ -13,12 +14,30 @@ public class RateLimiterService : IRateLimiterService
     }
     public bool CanPurchase(Guid clientId)
     {
-        return !_memoryCache.TryGetValue($"purchase:{clientId}", out _);
+        if(_memoryCache.TryGetValue($"purchase:{clientId}", out int requests))
+        {
+            if(requests >= RequestLimit)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void RecordPurchase(Guid clientId)
     {
-        _memoryCache.Set($"purchase:{clientId}", true, RateLimitTimeSpan);
+
+        if (_memoryCache.TryGetValue($"purchase:{clientId}", out int requests))
+        {
+            if(requests < RequestLimit)
+                requests++;
+        }
+        else
+        {
+            requests = 1;
+        }
+
+        _memoryCache.Set($"purchase:{clientId}", requests, RateLimitTimeSpan);
     }
 
 }
