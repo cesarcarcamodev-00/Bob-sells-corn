@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Bob-sells-corn/Dockerfile
+    container_name: corn-api
+    ports:
+      - "5180:5180"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  client:
+    build:
+      context: ./bob-sells-corn.client
+      dockerfile: Dockerfile
+    container_name: corn-client
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+networks:
+  default:
+    name: corn-network

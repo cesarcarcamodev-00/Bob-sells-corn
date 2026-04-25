@@ -4,4 +4,7 @@
     <Deploy />
   </Project>
   <Project Path="Bob-sells-corn/Bob-sells-corn.API.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
