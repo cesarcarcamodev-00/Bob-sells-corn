@@ -1,7 +1,7 @@
 # Build stage (keep as is)
 FROM node:20-alpine AS builder
 WORKDIR /app
-ENV VITE_API_URL=https://corn-api.onrender.com
+ENV VITE_API_URL=https://corn-api-6yk9.onrender.com
 COPY package.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
