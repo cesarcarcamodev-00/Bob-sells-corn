@@ -1,21 +1,7 @@
-# ============ API Dockerfile (FIXED) ============
-# Build stage
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS builder
-WORKDIR /src
-
-# Copy and restore project
-COPY Bob-sells-corn/Bob-sells-corn.API.csproj ./Bob-sells-corn/
-RUN dotnet restore ./Bob-sells-corn/Bob-sells-corn.API.csproj
-
-# Build and publish
-COPY Bob-sells-corn/ ./Bob-sells-corn/
-RUN dotnet publish ./Bob-sells-corn/Bob-sells-corn.API.csproj -c Release -o /app/publish
-
-# Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/sdk:10.0
 WORKDIR /app
-COPY --from=builder /app/publish .
+COPY . .
+RUN dotnet restore && dotnet publish -c Release -o ./publish
 EXPOSE 5180
-
-# Fix: Match the actual DLL name (API or API.dll)
+WORKDIR /app/publish
 ENTRYPOINT ["dotnet", "Bob-sells-corn.API.dll"]
